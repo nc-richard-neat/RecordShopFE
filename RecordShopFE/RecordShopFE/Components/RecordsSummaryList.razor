@@ -1,0 +1,46 @@
+﻿@using Models;
+
+@if (Albums == null)
+{
+    <Loading/>
+}
+else if (errorMessage != null)
+{
+    <h3>@errorMessage</h3>
+}
+else
+{
+    <div class="container py-4">
+        <div class="row">
+            @foreach (Album album in Albums)
+            {
+                <RecordSummary Album="album"/>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    public List<Album> Albums { get; set; } = new List<Album>();
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = new HttpClient();
+
+            var response = await http.GetFromJsonAsync<List<Album>>(
+                $"https://localhost:7029/Albums");
+
+            if (response != null)
+            {
+                Albums = response;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+}

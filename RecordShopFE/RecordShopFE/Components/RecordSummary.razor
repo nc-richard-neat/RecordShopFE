@@ -1,0 +1,21 @@
+﻿@using Models;
+
+<div class="col-12 col-md-6 col-lg-4 mb-4">
+    <div class="card shadow-lg rounded-lg overflow-hidden border-0">
+        <img src="@Album.AlbumArt" class="card-img-top img-fluid rounded-3" alt="@Album.AlbumName" style="height: 300px; object-fit: cover;" />
+        <div class="card-body text-center">
+            <h3 class="card-title mb-2 text-primary">@Album.AlbumName</h3>
+            <p class="card-text text-muted mb-1">@Album.Artist.Name</p>
+            <p class="card-text text-dark"><strong>Release Year:</strong> @Album.ReleaseYear</p>
+            <div class="spotify-player mt-3">
+                <iframe src="@Album.SpotifyUrl" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public Album Album { get; set; } = new Album();
+}
