@@ -4,7 +4,9 @@
     <div class="card shadow-lg rounded-lg overflow-hidden border-0">
         <img src="@Album.AlbumArt" class="card-img-top img-fluid rounded-3" alt="@Album.AlbumName" style="height: 300px; object-fit: cover;" />
         <div class="card-body text-center">
-            <h3 class="card-title mb-2 text-primary">@Album.AlbumName</h3>
+            <NavLink href=@Album.Id>
+                <h3 class="card-title mb-2 text-primary">@Album.AlbumName</h3>
+            </NavLink>
             <p class="card-text text-muted mb-1">@Album.Artist.Name</p>
             <p class="card-text text-dark"><strong>Release Year:</strong> @Album.ReleaseYear</p>
             <div class="spotify-player mt-3">

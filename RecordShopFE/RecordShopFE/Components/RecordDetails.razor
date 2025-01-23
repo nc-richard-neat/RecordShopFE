@@ -1,0 +1,93 @@
+﻿@page "/{Id:int}"
+
+@using Models;
+
+@if (Album == null)
+{
+    <Loading/>
+}
+else if (errorMessage != null)
+{
+    <h3>@errorMessage</h3>
+}
+else
+{
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+        <div class="row w-100 justify-content-center">
+            <div class="col-12 col-md-6 col-lg-5 mb-4">
+                <div class="card shadow-lg rounded-lg overflow-hidden border-0">
+                    <img src="@Album.AlbumArt" class="card-img-top img-fluid rounded-3" alt="@Album.AlbumName" style="height: 300px; object-fit: cover;" />
+                    <div class="card-body text-center">
+                        <h3 class="card-title mb-2 text-primary">@Album.AlbumName</h3>
+                        <p class="card-text text-muted mb-1">@Album.Artist.Name</p>
+                        <p class="card-text text-dark"><strong>Release Year:</strong> @Album.ReleaseYear</p>
+                        <div class="spotify-player mt-3">
+                            <iframe src="@Album.SpotifyUrl" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-5 mb-4">
+                <div class="card shadow-lg rounded-lg border-0 p-4">
+                    <h4 class="mb-3 text-center text-primary">Edit Album Details</h4>
+                    <form>
+                        <div class="mb-3">
+                            <label for="albumArt" class="form-label">Album Art URL</label>
+                            <input type="text" id="albumArt" class="form-control" placeholder="Enter image URL" value="@Album.AlbumArt" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="albumName" class="form-label">Album Name</label>
+                            <input type="text" id="albumName" class="form-control" placeholder="Enter album name" value="@Album.AlbumName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="artistName" class="form-label">Artist Name</label>
+                            <input type="text" id="artistName" class="form-control" placeholder="Enter artist name" value="@Album.Artist.Name" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="releaseYear" class="form-label">Release Year</label>
+                            <input type="number" id="releaseYear" class="form-control" placeholder="Enter release year" value="@Album.ReleaseYear" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="spotifyUrl" class="form-label">Spotify URL</label>
+                            <input type="text" id="spotifyUrl" class="form-control" placeholder="Enter Spotify URL" value="@Album.SpotifyUrl" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter] public Album Album { get; set; } = new Album();
+    [Parameter] public int Id { get; set; }
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = new HttpClient();
+
+            var response = await http.GetFromJsonAsync<Album>(
+                $"https://localhost:7029/Albums/{Id}");
+            Console.WriteLine("HELLLOOOO");
+            Console.WriteLine(response.Id);
+            Console.WriteLine(response.AlbumName);
+            if (response != null)
+            {
+                Album = response;
+                Console.WriteLine("HELLLOOOO");
+                Console.WriteLine(Album.Id);
+                Console.WriteLine(Album.AlbumName);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+}
